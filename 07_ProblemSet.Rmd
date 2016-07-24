@@ -1,7 +1,21 @@
+---
+title: "07 ProblemSet"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Task 1
+### a)
+First all the files are read in and parsed so that each row contains an observation and each column a variable. For every file the corresponding Season and episode were appended.
+
+```{r tidyText, echo=FALSE, warning=FALSE, message=FALSE}
 library(magrittr)
 library(dplyr)
 library(tidytext)
-# a. 
+
 tidyText <- NULL
 for (i in 1:6) {
   season <- paste0("S0",i)
@@ -32,28 +46,43 @@ for (i in 1:6) {
     tidyText <- rbind(tidyText, words)
   }
 }
+head(tidyText,10)
+```
 
+Now the words will be examined further. First all words are being count and without stop word removal and after with removed stop words.
+
+```{r CountwStopWords}
 tidyText%>%
   count(word,sort=TRUE)
-# Removing stop words
+```
+
+Here is the word count with removed stop words
+
+```{r countnoStopWords, message=FALSE}
 tidyText%>%
   anti_join(stop_words)%>%
   count(word,sort=TRUE)
+```
 
-stopWords <- stop_words
-stopWords%>%
-  filter(grepl("i'm",word))
-# All words in the dictionary are in lower case
-# change all words to lower case for improved 
-# stop word removal
+As you can see, not all stop words have been removed. All frequent words are in upper case. Therefore it is further necessary to convert all words from upper to lowercase. Otherwise the stop words will not be removed. Which is done in the following code
 
+```{r lowerCase, message=FALSE}
 tidyText%>%
   mutate(word = tolower(word))-> tidyText
 
 tidyText%>%
   anti_join(stop_words)%>%
   count(word,sort=TRUE)
-# results have been improved
+```
 
+### b)
 
-# b. 
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
