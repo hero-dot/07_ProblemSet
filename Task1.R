@@ -55,12 +55,19 @@ tidyText%>%
 tidyText%>%
   count(word,sort=TRUE)
 # results have been improved
-
-
-# b. 
+for (i in 1:6) {
+  sea <- paste0("S0",i)
+    tidyText%>%
+      filter(grepl(sea, season))%>%
+      count(word,sort=TRUE)%>%
+      head(.,10)%>%
+      as.data.frame(.)%>%
+      assign(sea,.,inherits = TRUE)
+}
+# b.
 
 # c.
 # Merging Season and Episode to a single variable
 tidyText%>%
   mutate(seaEp = paste0(season,episode))%>%
-  head(.)
+  bind_tf_idf(word,seaEp)
