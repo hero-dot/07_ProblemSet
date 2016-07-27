@@ -1,6 +1,6 @@
 ---
-title: "07 ProblemSet"
-output: html_document
+caption: 07 ProblemSet
+output: pdf_document
 ---
 
 ```{r setup, include=FALSE}
@@ -39,6 +39,7 @@ for (i in 1:6) {
       filter(!grepl(">",word))%>%
       filter(!grepl("<",word))%>%
       filter(!grepl("&",word))%>%
+      filter(!grepl("_",word))%>%
       mutate(word=gsub("\\,","",word))-> words
     
     words <- cbind(words, season = rep(season,nrow(words)), episode = rep(episode,nrow(words)))
@@ -68,10 +69,10 @@ As you can see, not all stop words have been removed. All frequent words are in 
 
 ```{r lowerCase, message=FALSE}
 tidyText%>%
-  mutate(word = tolower(word))-> tidyText
+  mutate(word = tolower(word))%>%
+  anti_join(stop_words)-> tidyText
 
 tidyText%>%
-  anti_join(stop_words)%>%
   count(word,sort=TRUE)
 
 
@@ -79,7 +80,6 @@ tidyText%>%
 
 Now we want to know what the 10 most frequent words for each episode are.
 ```{r freqWord, echo=FALSE, message=FALSE, results='asis'}
-#install.packages("stargazer")
 
 for (i in 1:6) {
     sea <- paste0("S0",i)
@@ -90,13 +90,12 @@ for (i in 1:6) {
       as.data.frame(.)%>%
       assign(sea,.,inherits = TRUE)
 }
-knitr::kable(S01, caption = "S01")
-stargazer::stargazer(S01, title = "S01")
-stargazer::stargazer(S02, title = "S02")
-stargazer::stargazer(S03, title = "S03")
-stargazer::stargazer(S04, title = "S04")
-stargazer::stargazer(S05, title = "S05")
-stargazer::stargazer(S06, title = "S06")
+knitr::kable(S01, caption = "S01", align = 'l')
+knitr::kable(S02, caption = "S02", align = 'l')
+knitr::kable(S03, caption = "S03", align = 'l')
+knitr::kable(S04, caption = "S04", align = 'l')
+knitr::kable(S05, caption = "S05", align = 'l')
+knitr::kable(S06, caption = "S06", align = 'l')
 ```
 
 ### b)

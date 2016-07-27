@@ -26,6 +26,7 @@ for (i in 1:6) {
       filter(!grepl(">",word))%>%
       filter(!grepl("<",word))%>%
       filter(!grepl("&",word))%>%
+      filter(!grepl("_",word))%>%
       mutate(word=gsub("\\,","",word))-> words
     
     words <- cbind(words, season = rep(season,nrow(words)), episode = rep(episode,nrow(words)), seaEp = rep(seaEp,nrow(words)))
@@ -43,16 +44,16 @@ tidyText%>%
 
 stopWords <- stop_words
 stopWords%>%
-  filter(grepl("i'm",word))
+  filter(grepl("the",word))
 # All words in the dictionary are in lower case
 # change all words to lower case for improved 
 # stop word removal
 
 tidyText%>%
-  mutate(word = tolower(word))-> tidyText
+  mutate(word = tolower(word))%>%
+  anti_join(stop_words)-> tidyText
 
 tidyText%>%
-  anti_join(stop_words)%>%
   count(word,sort=TRUE)
 # results have been improved
 for (i in 1:6) {
@@ -64,6 +65,7 @@ for (i in 1:6) {
       as.data.frame(.)%>%
       assign(sea,.,inherits = TRUE)
 }
+
 # b.
 
 
