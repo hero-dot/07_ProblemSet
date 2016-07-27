@@ -56,6 +56,7 @@ tidyText%>%
 tidyText%>%
   count(word,sort=TRUE)
 # results have been improved
+
 for (i in 1:6) {
   sea <- paste0("S0",i)
     tidyText%>%
@@ -66,24 +67,18 @@ for (i in 1:6) {
       assign(sea,.,inherits = TRUE)
 }
 
-# b.
 
+# b. 
 
 sentiments%>%
   filter(lexicon=="bing",sentiment=="negative")-> bingnegative
 
 tidyText %>%
   inner_join(bingnegative) -> negativeWordsInGoT
-
+  
 keeps <- c("word", "season", "episode")
 negativeWordsInGoT[keeps] -> negativeWordsInGoT
 
 negativeWordsInGoT%>%
-  tally(.,group_by(season,episode)) #?? df passt muss eig nur noch die Anzahl der negativen
-#Wörter pro episode zählen und dann darstellen
-
-
-# c.
-# Merging Season and Episode to a single variable
-tidyText%>%
-  bind_tf_idf(word,seaEp)
+  summarize(word= n()) 
+  
