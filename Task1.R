@@ -1,6 +1,7 @@
 library(magrittr)
 library(dplyr)
 library(tidytext)
+
 # a. 
 tidyText <- NULL
 for (i in 1:6) {
@@ -48,12 +49,18 @@ stopWords%>%
 # stop word removal
 
 tidyText%>%
-  mutate(word = tolower(word))-> tidyText
+  mutate(word = tolower(word))%>%
+  anti_join(stop_words)-> tidyText
 
 tidyText%>%
-  anti_join(stop_words)%>%
   count(word,sort=TRUE)
 # results have been improved
 
 
 # b. 
+
+# c.
+# Merging Season and Episode to a single variable
+tidyText%>%
+  mutate(seaEp = paste0(season,episode))%>%
+  head(.)
