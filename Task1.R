@@ -1,7 +1,11 @@
 library(magrittr)
 library(dplyr)
 library(tidytext)
+<<<<<<< HEAD
 library(ggplot2)
+=======
+
+>>>>>>> 70d1d35e31e92ad03c2f1a5340b2db7b509a11e2
 # a. 
 tidyText <- NULL
 for (i in 1:6) {
@@ -49,16 +53,17 @@ stopWords%>%
 # stop word removal
 
 tidyText%>%
-  mutate(word = tolower(word))-> tidyText
+  mutate(word = tolower(word))%>%
+  anti_join(stop_words)-> tidyText
 
 tidyText%>%
-  anti_join(stop_words)%>%
   count(word,sort=TRUE)
 # results have been improved
 
 
 # b. 
 
+<<<<<<< HEAD
 sentiments%>%
   filter(lexicon=="bing",sentiment=="negative")-> bingnegative
 
@@ -71,3 +76,10 @@ negativeWordsInGoT[keeps] -> negativeWordsInGoT
 negativeWordsInGoT%>%
   tally(.,group_by(season,episode)) #?? df passt muss eig nur noch die Anzahl der negativen
                                     #Wörter pro episode zählen und dann darstellen
+=======
+# c.
+# Merging Season and Episode to a single variable
+tidyText%>%
+  mutate(seaEp = paste0(season,episode))%>%
+  head(.)
+>>>>>>> 70d1d35e31e92ad03c2f1a5340b2db7b509a11e2
