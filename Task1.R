@@ -1,7 +1,7 @@
 library(magrittr)
 library(dplyr)
 library(tidytext)
-
+library(ggplot2)
 # a. 
 tidyText <- NULL
 for (i in 1:6) {
@@ -28,7 +28,7 @@ for (i in 1:6) {
       filter(!grepl("&",word))%>%
       mutate(word=gsub("\\,","",word))-> words
     
-    words <- cbind(words, season = rep(season,nrow(words)), episode = rep(episode,nrow(words)))
+    words <- cbind(words, season = rep(season,nrow(words)), episode = rep(episode,nrow(words)), seaEp = rep(seaEp,nrow(words)))
     
     tidyText <- rbind(tidyText, words)
   }
@@ -49,10 +49,10 @@ stopWords%>%
 # stop word removal
 
 tidyText%>%
-  mutate(word = tolower(word))%>%
-  anti_join(stop_words)-> tidyText
+  mutate(word = tolower(word))-> tidyText
 
 tidyText%>%
+  anti_join(stop_words)%>%
   count(word,sort=TRUE)
 # results have been improved
 for (i in 1:6) {
@@ -66,8 +66,22 @@ for (i in 1:6) {
 }
 # b.
 
+
+sentiments%>%
+  filter(lexicon=="bing",sentiment=="negative")-> bingnegative
+
+tidyText %>%
+  inner_join(bingnegative) -> negativeWordsInGoT
+
+keeps <- c("word", "season", "episode")
+negativeWordsInGoT[keeps] -> negativeWordsInGoT
+
+negativeWordsInGoT%>%
+  tally(.,group_by(season,episode)) #?? df passt muss eig nur noch die Anzahl der negativen
+#Wörter pro episode zählen und dann darstellen
+
+
 # c.
 # Merging Season and Episode to a single variable
 tidyText%>%
-  mutate(seaEp = paste0(season,episode))%>%
   bind_tf_idf(word,seaEp)
