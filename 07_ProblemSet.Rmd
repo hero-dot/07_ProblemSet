@@ -73,6 +73,30 @@ tidyText%>%
 tidyText%>%
   anti_join(stop_words)%>%
   count(word,sort=TRUE)
+
+
+```
+
+Now we want to know what the 10 most frequent words for each episode are.
+```{r freqWord, echo=FALSE, message=FALSE, results='asis'}
+#install.packages("stargazer")
+
+for (i in 1:6) {
+    sea <- paste0("S0",i)
+    tidyText%>%
+      filter(grepl(sea, season))%>%
+      count(word,sort=TRUE)%>%
+      head(.,10)%>%
+      as.data.frame(.)%>%
+      assign(sea,.,inherits = TRUE)
+}
+knitr::kable(S01, caption = "S01")
+stargazer::stargazer(S01, title = "S01")
+stargazer::stargazer(S02, title = "S02")
+stargazer::stargazer(S03, title = "S03")
+stargazer::stargazer(S04, title = "S04")
+stargazer::stargazer(S05, title = "S05")
+stargazer::stargazer(S06, title = "S06")
 ```
 
 ### b)
