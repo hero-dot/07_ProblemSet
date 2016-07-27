@@ -83,7 +83,8 @@ xtabs(~ seaEp, negativeWordsInGoT) -> countTableWords
   
 as.data.frame(countTableWords) -> nrNegativeWordsPerSeaEP
 nrNegativeWordsPerSeaEP%>%
-  mutate(season = strsplit(as.character(.$seaEp),"E")[[1]][1])->nrNegativeWordsPerSeaEP
+  mutate(seaEp = as.character(.$seaEp))%>%
+  mutate(season = sapply(.$seaEp, function(x) strsplit(x,"E")[[1]][1]))->nrNegativeWordsPerSeaEP
 
 #also das sind jetzt die anzahl der negativen Wörter pro episode
 #müssen dass nur noch plotten aber facet nach season 
