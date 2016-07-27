@@ -1,6 +1,7 @@
 library(magrittr)
 library(dplyr)
 library(tidytext)
+library(ggplot2)
 # a. 
 tidyText <- NULL
 for (i in 1:6) {
@@ -58,3 +59,15 @@ tidyText%>%
 
 # b. 
 
+sentiments%>%
+  filter(lexicon=="bing",sentiment=="negative")-> bingnegative
+
+tidyText %>%
+  inner_join(bingnegative) -> negativeWordsInGoT
+  
+keeps <- c("word", "season", "episode")
+negativeWordsInGoT[keeps] -> negativeWordsInGoT
+
+negativeWordsInGoT%>%
+  tally(.,group_by(season,episode)) #?? df passt muss eig nur noch die Anzahl der negativen
+                                    #Wörter pro episode zählen und dann darstellen
