@@ -82,10 +82,17 @@ negativeWordsInGoT[keeps] -> negativeWordsInGoT
 xtabs(~ seaEp, negativeWordsInGoT) -> countTableWords
   
 as.data.frame(countTableWords) -> nrNegativeWordsPerSeaEP
+
 nrNegativeWordsPerSeaEP%>%
   mutate(seaEp = as.character(.$seaEp))%>%
-  mutate(season = sapply(.$seaEp, function(x) strsplit(x,"E")[[1]][1]))->nrNegativeWordsPerSeaEP
+  mutate(season = sapply(.$seaEp, function(x) strsplit(x,"E")[[1]][1]))%>%
+  mutate(episode = sapply(.$seaEp, function(x) strsplit(x,"E")[[1]][2]))->nrNegativeWordsPerSeaEP
 
-#also das sind jetzt die anzahl der negativen Wörter pro episode
-#müssen dass nur noch plotten aber facet nach season 
+nrNegativeWordsPerSeaEP%>%
+  group_by(season)%>%
+  ggplot(.,aes(x=episode, y=Freq)) + 
+  geom_point() +
+  ggtitle("Negative Words in GoT") +
+  xlab("Episoden") +
+  facet_wrap(~season)
   
