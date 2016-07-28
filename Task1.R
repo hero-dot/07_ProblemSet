@@ -96,3 +96,6 @@ nrNegativeWordsPerSeaEP%>%
   xlab("Episoden") +
   facet_wrap(~season)
   
+sentiments%>%
+  filter(lexicon=="AFINN", score <= 0)-> afinnNegative
+
