@@ -69,6 +69,7 @@ for (i in 1:6) {
 
 
 # b. 
+# word-level sentiment analysis with bing
 
 sentiments%>%
   filter(lexicon=="bing",sentiment=="negative")-> bingnegative
@@ -92,7 +93,36 @@ nrNegativeWordsPerSeaEP%>%
   group_by(season)%>%
   ggplot(.,aes(x=episode, y=Freq)) + 
   geom_point() +
-  ggtitle("Negative Words in GoT") +
+  ggtitle("Negative Words in GoT - BING") +
   xlab("Episoden") +
   facet_wrap(~season)
   
+# word-level sentiment analysis with AFINN
+
+sentiments%>%
+  filter(lexicon=="AFINN")%>%
+  select(word, afinn_score = score)%>%
+  filter(afinn_score < 0)-> afinnNegative
+
+tidyText %>%
+  inner_join(afinnNegative) -> negativeWordsInGoT1
+
+keeps <- c("word", "seaEp")
+negativeWordsInGoT1[keeps] -> negativeWordsInGoT1
+
+xtabs(~ seaEp, negativeWordsInGoT1) -> countTableWords1
+
+as.data.frame(countTableWords1) -> nrNegativeWordsPerSeaEP1
+
+nrNegativeWordsPerSeaEP1%>%
+  mutate(seaEp = as.character(.$seaEp))%>%
+  mutate(season = sapply(.$seaEp, function(x) strsplit(x,"E")[[1]][1]))%>%
+  mutate(episode = sapply(.$seaEp, function(x) strsplit(x,"E")[[1]][2]))->nrNegativeWordsPerSeaEP1
+
+nrNegativeWordsPerSeaEP1%>%
+  group_by(season)%>%
+  ggplot(.,aes(x=episode, y=Freq)) + 
+  geom_point() +
+  ggtitle("Negative Words in GoT - AFINN") +
+  xlab("Episoden") +
+  facet_wrap(~season)
