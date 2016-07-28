@@ -97,6 +97,7 @@ nrNegativeWordsPerSeaEP%>%
   xlab("Episoden") +
   facet_wrap(~season)
   
+<<<<<<< HEAD
 # word-level sentiment analysis with AFINN
 
 sentiments%>%
@@ -126,3 +127,8 @@ nrNegativeWordsPerSeaEP1%>%
   ggtitle("Negative Words in GoT - AFINN") +
   xlab("Episoden") +
   facet_wrap(~season)
+=======
+sentiments%>%
+  filter(lexicon=="AFINN", score <= 0)-> afinnNegative
+
+>>>>>>> 2d81b66ee2da5b58ffc053c7880bde14213e1ea1
